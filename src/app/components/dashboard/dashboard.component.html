@@ -1,0 +1,249 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6 animate-slide-up">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-semibold text-gray-900">Revenue Overview</h1>
+      <p class="text-sm text-gray-500 mt-0.5">Last 30 days · Updated just now</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="btn-secondary text-xs py-1.5 px-3">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Export
+      </button>
+      <button class="btn-primary text-xs py-1.5 px-3">Last 30 days ↓</button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+    <!-- Loading skeletons -->
+    <ng-container *ngIf="loading">
+      <div class="card p-5 space-y-3" *ngFor="let i of [1,2,3,4]">
+        <app-skeleton height="0.875rem" width="60%"></app-skeleton>
+        <app-skeleton height="1.75rem" width="80%"></app-skeleton>
+        <app-skeleton height="0.75rem" width="50%"></app-skeleton>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading && data">
+
+      <!-- Total Clicks -->
+      <div class="card p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+            <svg class="w-4.5 h-4.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/>
+            </svg>
+          </div>
+          <span class="badge" [class]="data.stats.clicksChange >= 0 ? 'badge-green' : 'badge-red'">
+            {{ data.stats.clicksChange >= 0 ? '+' : '' }}{{ data.stats.clicksChange }}%
+          </span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900 font-mono">{{ data.stats.totalClicks | number }}</p>
+        <p class="text-xs text-gray-500 mt-1">Total Clicks</p>
+      </div>
+
+      <!-- Total Revenue -->
+      <div class="card p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="badge" [class]="data.stats.revenueChange >= 0 ? 'badge-green' : 'badge-red'">
+            {{ data.stats.revenueChange >= 0 ? '+' : '' }}{{ data.stats.revenueChange }}%
+          </span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900 font-mono">{{ data.stats.totalRevenue | currency:'INR':'symbol':'1.0-0' }}</p>
+        <p class="text-xs text-gray-500 mt-1">Total Revenue</p>
+      </div>
+
+      <!-- Conversion Rate -->
+      <div class="card p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center">
+            <svg class="w-4.5 h-4.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <span class="badge" [class]="data.stats.conversionChange >= 0 ? 'badge-green' : 'badge-red'">
+            {{ data.stats.conversionChange >= 0 ? '+' : '' }}{{ data.stats.conversionChange }}%
+          </span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900 font-mono">{{ data.stats.conversionRate }}%</p>
+        <p class="text-xs text-gray-500 mt-1">Conversion Rate</p>
+      </div>
+
+      <!-- Top Campaign -->
+      <div class="card p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+            <svg class="w-4.5 h-4.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+          </div>
+          <span class="badge badge-indigo">Top</span>
+        </div>
+        <p class="text-sm font-bold text-gray-900 leading-tight line-clamp-2">{{ data.stats.topCampaign }}</p>
+        <p class="text-xs text-gray-500 mt-1">Top Campaign</p>
+      </div>
+
+    </ng-container>
+  </div>
+
+  <!-- Chart + Insights -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+    <!-- Revenue Chart (spans 2 cols) -->
+    <div class="card p-5 lg:col-span-2">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900">Revenue vs Clicks</h3>
+          <p class="text-xs text-gray-400 mt-0.5">Daily performance trend</p>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span class="flex items-center gap-1.5 text-gray-500">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Revenue
+          </span>
+          <span class="flex items-center gap-1.5 text-gray-500">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-200 inline-block"></span> Clicks
+          </span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="loading">
+        <div class="h-48 flex items-end gap-2 px-2">
+          <div
+            class="flex-1 skeleton rounded-t"
+            *ngFor="let h of barHeights"
+            [style.height.px]="h">
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!loading && data">
+        <div class="h-52 relative">
+          <app-mini-chart [data]="data.chartData"></app-mini-chart>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Insights Panel -->
+    <div class="card p-5 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-gray-900">Insights</h3>
+        <span class="badge badge-indigo">{{ data?.insights?.length ?? 0 }} new</span>
+      </div>
+
+      <ng-container *ngIf="loading">
+        <div class="p-3 rounded-xl bg-gray-50 space-y-2" *ngFor="let i of [1,2,3]">
+          <app-skeleton height="0.75rem" width="70%"></app-skeleton>
+          <app-skeleton height="0.625rem" width="90%"></app-skeleton>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!loading && data?.insights?.length">
+        <div
+          class="p-3 rounded-xl border transition-all hover:shadow-sm"
+          *ngFor="let insight of data!.insights"
+          [ngClass]="{
+            'bg-emerald-50 border-emerald-100': insight.type === 'success',
+            'bg-amber-50 border-amber-100': insight.type === 'warning',
+            'bg-indigo-50 border-indigo-100': insight.type === 'info'
+          }">
+          <div class="flex items-start gap-2">
+            <span class="text-sm mt-0.5">
+              <ng-container *ngIf="insight.type === 'success'">🎯</ng-container>
+              <ng-container *ngIf="insight.type === 'warning'">⚠️</ng-container>
+              <ng-container *ngIf="insight.type !== 'success' && insight.type !== 'warning'">💡</ng-container>
+            </span>
+            <div>
+              <p class="text-xs font-semibold text-gray-800">{{ insight.title }}</p>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">{{ insight.description }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Campaign Performance Table -->
+  <div class="card overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900">Campaign Performance</h3>
+        <p class="text-xs text-gray-400 mt-0.5">All active campaigns this period</p>
+      </div>
+      <a routerLink="/links" class="text-xs text-indigo-600 font-medium hover:text-indigo-700">View all →</a>
+    </div>
+
+    <ng-container *ngIf="loading">
+      <div class="divide-y divide-gray-50">
+        <div class="px-5 py-3.5 flex items-center gap-4" *ngFor="let i of [1,2,3,4]">
+          <app-skeleton height="0.875rem" width="30%"></app-skeleton>
+          <app-skeleton height="0.875rem" width="15%" class="ml-auto"></app-skeleton>
+          <app-skeleton height="0.875rem" width="15%"></app-skeleton>
+          <app-skeleton height="1.25rem" width="10%"></app-skeleton>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading && data?.campaigns?.length">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-50/50">
+            <th class="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Campaign</th>
+            <th class="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Clicks</th>
+            <th class="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Revenue</th>
+            <th class="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Conv.</th>
+            <th class="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr
+            class="hover:bg-gray-50/60 transition-colors group"
+            *ngFor="let campaign of data!.campaigns">
+            <td class="px-5 py-3.5">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                  <span class="text-xs font-semibold text-indigo-600">{{ campaign.name.slice(0,2).toUpperCase() }}</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">{{ campaign.name }}</p>
+                  <p class="text-xs text-gray-400 font-mono">{{ campaign.shortUrl }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-3.5 text-right">
+              <span class="text-sm font-medium text-gray-700 font-mono">{{ campaign.clicks | number }}</span>
+            </td>
+            <td class="px-5 py-3.5 text-right">
+              <span class="text-sm font-semibold" [class]="campaign.revenue > 0 ? 'text-emerald-600' : 'text-gray-400'">
+                {{ campaign.revenue > 0 ? (campaign.revenue | currency:'INR':'symbol':'1.0-0') : '—' }}
+              </span>
+            </td>
+            <td class="px-5 py-3.5 text-right">
+              <span class="text-sm text-gray-600 font-mono">{{ campaign.conversions }}</span>
+            </td>
+            <td class="px-5 py-3.5 text-right">
+              <span class="badge" [ngClass]="campaign.revenue > 0 ? 'badge-green' : 'badge-red'">
+                {{ campaign.revenue > 0 ? 'Active' : 'No rev.' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <ng-container *ngIf="!loading && !data?.campaigns?.length">
+      <app-empty-state title="No campaigns yet" subtitle="Create your first tracking link to get started."></app-empty-state>
+    </ng-container>
+
+  </div>
+
+</div>
