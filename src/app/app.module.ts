@@ -12,8 +12,7 @@ import { ToastContainerComponent } from './components/toast-container/toast-cont
 @NgModule({
   declarations: [
     AppComponent,
-    ToastContainerComponent
-
+    ToastContainerComponent,
   ],
   imports: [
     BrowserModule,

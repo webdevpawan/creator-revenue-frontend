@@ -28,7 +28,7 @@ export class LnNavbarComponent {
     { label: 'Features',     href: '#features' },
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Testimonials', href: '#testimonials' },
-    { label: 'Pricing',      href: '#pricing' },
+    { label: 'Pricing',      href: '/pricing' },
   ];
  
   @HostListener('window:scroll')

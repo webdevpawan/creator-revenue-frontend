@@ -7,7 +7,6 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./landing/landing.routes').then(m => m.landingRoutes),
-    pathMatch: 'full',
   },
   {
     path: 'login',
@@ -40,8 +39,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  { path: '**', redirectTo: '/login' }
-
+{ path: '**', redirectTo: '' }
 ];
 
 @NgModule({

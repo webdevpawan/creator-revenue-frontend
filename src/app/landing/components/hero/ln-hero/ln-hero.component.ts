@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-ln-hero',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './ln-hero.component.html',
   styleUrls: ['./ln-hero.component.scss']
 })
 export class LnHeroComponent {
+  
 
    avatars = [
     { initials: 'AK', color: 'linear-gradient(135deg,#818cf8,#6366f1)' },
