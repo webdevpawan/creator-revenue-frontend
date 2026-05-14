@@ -1,479 +1,454 @@
-<!-- src/app/landing/components/pricing/ln-pricing.component.html -->
+<!-- ln-pricing.component.html — pure Tailwind, no SCSS classes -->
 
-<!-- ════════════════════════════════════════════════════
-     PRICING PAGE SHELL
-════════════════════════════════════════════════════ -->
-<div class="pricing-page">
+<div class="relative overflow-x-hidden bg-white">
 
-  <!-- ── BACKGROUND DECORATION ── -->
-  <div class="pricing-bg" aria-hidden="true">
-    <div class="orb orb-top-right"></div>
-    <div class="orb orb-top-left"></div>
-    <div class="orb orb-bottom-center"></div>
-    <div class="dot-grid"></div>
+  <!-- Background orbs + dot grid -->
+  <div class="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+    <div class="orb-1 absolute -top-20 -right-24 w-96 h-96 rounded-full bg-violet-200/25 blur-3xl"></div>
+    <div class="orb-2 absolute top-10 -left-28 w-80 h-80 rounded-full bg-indigo-200/20 blur-3xl"></div>
+    <div class="dot-grid absolute inset-0 opacity-40"></div>
   </div>
 
+  <!-- SECTION 1: HEADER + BILLING TOGGLE -->
+  <section class="relative z-10 pt-32 pb-12 px-4 text-center">
+    <div class="max-w-5xl mx-auto">
 
-  <!-- ════════════════════════════════════════════════
-       SECTION 1 — HERO HEADER
-  ════════════════════════════════════════════════ -->
-  <section class="pricing-header">
-    <div class="section-inner">
-
-      <!-- eyebrow pill -->
-      <div class="eyebrow-pill">
-        <span class="eyebrow-dot"></span>
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white
+                  border border-indigo-100 shadow-sm text-xs font-semibold text-indigo-600 mb-6">
+        <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block"></span>
         Simple, transparent pricing
       </div>
 
-      <h1 class="pricing-headline">
+      <h1 class="text-5xl sm:text-6xl font-bold tracking-tight text-gray-950 leading-tight mb-4">
         Plans that grow<br>
-        <span class="gradient-text">with your audience</span>
+        <span class="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">
+          with your audience
+        </span>
       </h1>
 
-      <p class="pricing-subheading">
-        Start free. Upgrade when you're ready. All plans include a 14-day trial.
-        No credit card required.
+      <p class="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
+        Start free. Upgrade when you're ready. 14-day trial on all paid plans. No credit card required.
       </p>
 
       <!-- Metrics strip -->
-      <div class="metrics-strip">
-        <div class="metric-item" *ngFor="let m of metrics; trackBy: trackByIndex">
-          <span class="metric-icon">{{ m.icon }}</span>
-          <span class="metric-value">{{ m.value }}</span>
-          <span class="metric-label">{{ m.label }}</span>
+      <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <div *ngFor="let m of metrics; trackBy: trackByIndex"
+             class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100
+                    rounded-full shadow-sm text-sm hover:-translate-y-0.5 transition-transform">
+          <span>{{ m.icon }}</span>
+          <span class="font-bold text-indigo-600">{{ m.value }}</span>
+          <span class="text-gray-500 text-xs">{{ m.label }}</span>
         </div>
       </div>
 
-      <!-- ── BILLING TOGGLE ── -->
-      <div class="billing-toggle-wrap">
-        <span class="billing-label" [class.billing-label--active]="!isYearly">Monthly</span>
+      <!-- Billing toggle -->
+      <div class="inline-flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-full px-4 py-2">
+        <span class="text-sm font-medium transition-colors"
+              [class.text-gray-900]="!isYearly" [class.text-gray-400]="isYearly">Monthly</span>
 
-        <button
-          class="toggle-track"
-          [class.toggle-track--on]="isYearly"
-          (click)="toggleBilling(!isYearly)"
-          aria-label="Toggle billing period"
-          type="button"
-        >
-          <span class="toggle-thumb" [class.toggle-thumb--on]="isYearly"></span>
+        <button type="button" (click)="toggleBilling(!isYearly)" aria-label="Toggle billing"
+                class="relative w-11 h-6 rounded-full border-0 cursor-pointer transition-colors duration-200"
+                [class.bg-indigo-600]="isYearly" [class.bg-gray-300]="!isYearly">
+          <span class="toggle-thumb absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow"
+                [class.translate-x-5]="isYearly"></span>
         </button>
 
-        <span class="billing-label" [class.billing-label--active]="isYearly">Yearly</span>
+        <span class="text-sm font-medium transition-colors"
+              [class.text-gray-900]="isYearly" [class.text-gray-400]="!isYearly">Yearly</span>
 
-        <span class="save-badge" *ngIf="isYearly">Save 20%</span>
+        <span *ngIf="isYearly"
+              class="text-xs font-bold px-2.5 py-0.5 rounded-full text-white
+                     bg-gradient-to-r from-indigo-500 to-violet-500">
+          Save 20%
+        </span>
       </div>
 
     </div>
   </section>
 
+  <!-- SECTION 2: PRICING CARDS -->
+  <section class="relative z-10 pb-20 px-4">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
 
-  <!-- ════════════════════════════════════════════════
-       SECTION 2 — PRICING CARDS
-  ════════════════════════════════════════════════ -->
-  <section class="pricing-cards-section">
-    <div class="section-inner">
-      <div class="cards-grid">
+      <div *ngFor="let plan of plans; trackBy: trackByPlanId"
+           class="relative flex flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1.5"
+           [ngClass]="{
+             'bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-indigo-50': !plan.highlighted && !plan.dark,
+             'bg-white border-2 border-indigo-500 shadow-lg shadow-indigo-100': plan.highlighted,
+             'bg-gradient-to-b from-[#1e1b4b] to-[#312e81] border border-white/10 shadow-xl': plan.dark
+           }">
 
-        <div
-          class="pricing-card"
-          [class.pricing-card--highlighted]="plan.highlighted"
-          [class.pricing-card--dark]="plan.id === 'creator-plus'"
-          *ngFor="let plan of plans; trackBy: trackByPlanId"
-        >
+        <!-- Badge -->
+        <div *ngIf="plan.badge"
+             class="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1
+                    px-3 py-1 rounded-full text-xs font-bold text-white whitespace-nowrap shadow-lg"
+             [ngClass]="plan.badgeGradient === 'from-indigo-500 to-violet-500'
+               ? 'bg-gradient-to-r from-indigo-500 to-violet-500'
+               : 'bg-gradient-to-r from-violet-600 to-purple-700'">
+          <svg class="w-2.5 h-2.5" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 1l1.2 3.6H11L8.1 6.8l1.2 3.6L6 8.2l-3.3 2.2 1.2-3.6L1 4.6h3.8z"/>
+          </svg>
+          {{ plan.badge }}
+        </div>
 
-          <!-- Popular / Best Value badge -->
-          <div class="plan-badge" *ngIf="plan.badge"
-               [class.plan-badge--indigo]="plan.badgeColor === 'indigo'"
-               [class.plan-badge--violet]="plan.badgeColor === 'violet'">
-            <svg class="badge-star" viewBox="0 0 12 12" fill="currentColor">
-              <path d="M6 1l1.2 3.6H11L8.1 6.8l1.2 3.6L6 8.2l-3.3 2.2 1.2-3.6L1 4.6h3.8z"/>
+        <!-- Plan name + desc -->
+        <div class="mb-5">
+          <h3 class="text-base font-bold mb-1"
+              [class.text-white]="plan.dark" [class.text-gray-900]="!plan.dark">{{ plan.name }}</h3>
+          <p class="text-sm leading-relaxed"
+             [class.text-indigo-200]="plan.dark" [class.text-gray-500]="!plan.dark">{{ plan.description }}</p>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-5 min-h-[72px]">
+          <div class="flex items-end gap-1 leading-none mb-1">
+            <span [ngClass]="plan.dark ? 'text-white opacity-60' : 'text-gray-400'" class="text-xl font-semibold pb-1">₹</span>
+            <span class="text-5xl font-extrabold tracking-tight"
+                  [class.text-white]="plan.dark" [class.text-gray-950]="!plan.dark">
+              {{ getDisplayPrice(plan) | number }}
+            </span>
+            <span *ngIf="plan.monthlyPrice > 0" [ngClass]="plan.dark ? 'text-white opacity-50' : 'text-gray-400'" class="text-sm pb-1.5">/mo</span>
+          </div>
+          <p *ngIf="plan.monthlyPrice === 0" class="text-sm font-semibold text-emerald-500">Free forever</p>
+          <p *ngIf="isYearly && plan.monthlyPrice > 0" class="text-xs"
+             [class.text-indigo-200]="plan.dark" [class.text-gray-400]="!plan.dark">
+            billed annually — save {{ getSavings(plan) }}%
+          </p>
+          <p *ngIf="!isYearly && plan.monthlyPrice > 0" class="text-xs"
+             [class.text-indigo-200]="plan.dark" [class.text-gray-400]="!plan.dark">
+            or ₹{{ plan.yearlyPrice | number }}/mo billed yearly
+          </p>
+        </div>
+
+        <!-- CTA -->
+        <a routerLink="/auth/signup"
+           class="flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl text-sm
+                  font-semibold mb-2 transition-all duration-200 hover:-translate-y-0.5"
+           [ngClass]="{
+             'bg-indigo-600 text-white shadow-md shadow-indigo-200 hover:bg-indigo-700': plan.ctaStyle === 'primary',
+             'bg-white text-[#1e1b4b] hover:bg-gray-50 shadow': plan.ctaStyle === 'dark',
+             'border border-gray-200 text-gray-700 hover:border-indigo-200 hover:text-indigo-600 hover:bg-indigo-50': plan.ctaStyle === 'outline'
+           }">
+          {{ plan.ctaLabel }}
+          <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
+            <path d="M4 10h12M11 6l5 4-5 4" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <p *ngIf="plan.monthlyPrice > 0"
+           class="flex items-center justify-center gap-1 text-xs mb-4"
+           [class.text-indigo-200]="plan.dark" [class.text-gray-400]="!plan.dark">
+          <svg viewBox="0 0 20 20" fill="none" class="w-3 h-3">
+            <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
+              stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          Secure checkout via Razorpay
+        </p>
+
+        <div [ngClass]="plan.dark ? 'bg-white opacity-10' : 'bg-gray-100'" class="mb-4 h-px"></div>
+
+        <!-- Features list -->
+        <ul class="flex flex-col gap-2.5 flex-1">
+          <li *ngFor="let f of plan.features; trackBy: trackByIndex"
+              class="flex items-start gap-2.5">
+            <span *ngIf="f.included"
+                  [ngClass]="plan.dark ? 'bg-white opacity-10' : 'bg-emerald-50'"
+                  class="flex-shrink-0 rounded-md flex items-center justify-center mt-0.5" style="width:18px;height:18px">
+              <svg viewBox="0 0 16 16" fill="none" class="w-3.5 h-3.5">
+                <path d="M3 8l3.5 3.5L13 4.5"
+                  [attr.stroke]="plan.dark ? '#a5b4fc' : '#10b981'"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span *ngIf="!f.included"
+                  [ngClass]="plan.dark ? 'bg-white opacity-5' : 'bg-gray-100'"
+                  class="flex-shrink-0 rounded-md flex items-center justify-center mt-0.5" style="width:18px;height:18px">
+              <svg viewBox="0 0 16 16" fill="none" class="w-3.5 h-3.5">
+                <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="text-sm leading-snug"
+                  [ngClass]="{
+                    'text-gray-400': !f.included && !plan.dark,
+                    'text-white/40': !f.included && plan.dark,
+                    'font-semibold text-white': f.included && f.highlight && plan.dark,
+                    'font-semibold text-gray-900': f.included && f.highlight && !plan.dark,
+                    'text-white/80': f.included && !f.highlight && plan.dark,
+                    'text-gray-600': f.included && !f.highlight && !plan.dark
+                  }">{{ f.text }}</span>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: RAZORPAY CTA -->
+  <section class="relative z-10 py-16 px-4 bg-gray-50 border-y border-gray-100">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50
+                    border border-indigo-100 text-xs font-semibold text-indigo-600 mb-4">
+          <svg viewBox="0 0 20 20" fill="none" class="w-3.5 h-3.5">
+            <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
+              stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          Powered by Razorpay
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-950 tracking-tight leading-tight mb-3">
+          Ready to unlock your
+          <span class="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">
+            full earning potential?
+          </span>
+        </h2>
+        <p class="text-base text-gray-500 leading-relaxed mb-6 max-w-md">
+          Upgrade in seconds with India's most trusted payment gateway.
+          UPI, cards, net banking, and EMI options available.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <div *ngFor="let b of trustBadges; trackBy: trackByIndex"
+               class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200
+                      rounded-full text-xs font-medium text-gray-700 shadow-sm">
+            <svg *ngIf="b.type !== 'star'" viewBox="0 0 20 20" fill="none" class="w-3.5 h-3.5 text-indigo-500">
+              <ng-container [ngSwitch]="b.type">
+                <path *ngSwitchCase="'shield'"
+                  d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3zM7 10l2 2 4-4"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path *ngSwitchCase="'lock'"
+                  d="M7 7V5a3 3 0 016 0v2M5 7h10a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path *ngSwitchCase="'clock'"
+                  d="M10 4a6 6 0 100 12 6 6 0 000-12zM10 7v3l2 2"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </ng-container>
             </svg>
-            {{ plan.badge }}
+            <svg *ngIf="b.type === 'star'" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 text-amber-400">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969
+                0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755
+                1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            {{ b.label }}
           </div>
+        </div>
+      </div>
 
-          <!-- Card header -->
-          <div class="plan-header">
-            <h3 class="plan-name">{{ plan.name }}</h3>
-            <p class="plan-description">{{ plan.description }}</p>
-          </div>
-
-          <!-- Price -->
-          <div class="plan-price-block">
-            <div class="plan-price">
-              <span class="price-currency">{{ plan.currency }}</span>
-              <span class="price-amount">{{ getDisplayPrice(plan) | number }}</span>
-              <span class="price-period" *ngIf="plan.monthlyPrice > 0">/mo</span>
-            </div>
-            <p class="price-free-label" *ngIf="plan.monthlyPrice === 0">Free forever</p>
-            <p class="price-yearly-note" *ngIf="isYearly && plan.monthlyPrice > 0">
-              billed annually — save {{ getSavings(plan) }}%
-            </p>
-            <p class="price-yearly-note" *ngIf="!isYearly && plan.monthlyPrice > 0">
-              or ₹{{ plan.yearlyPrice | number }}/mo billed yearly
-            </p>
-          </div>
-
-          <!-- CTA button -->
-          <a
-            routerLink="/auth/signup"
-            class="plan-cta"
-            [class.plan-cta--primary]="plan.ctaStyle === 'primary'"
-            [class.plan-cta--dark]="plan.ctaStyle === 'dark'"
-            [class.plan-cta--outline]="plan.ctaStyle === 'outline'"
-          >
-            {{ plan.ctaLabel }}
-            <svg viewBox="0 0 20 20" fill="none" class="cta-arrow">
-              <path d="M4 10h12M11 6l5 4-5 4" stroke="currentColor" stroke-width="1.75"
+      <!-- Payment card mockup -->
+      <div class="rounded-2xl p-6 bg-gradient-to-b from-[#1e1b4b] to-[#4338ca]
+                  shadow-2xl shadow-indigo-900/30 rotate-1 hover:rotate-0 transition-transform duration-300">
+        <div class="flex items-center gap-2.5 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
+            <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
+              <path d="M3 14L6 9L10 12L14 6L17 10" stroke="white" stroke-width="1.75"
                 stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </a>
-
-          <!-- Razorpay note for paid plans -->
-          <p class="razorpay-note" *ngIf="plan.monthlyPrice > 0">
-            <svg viewBox="0 0 20 20" fill="none" class="razorpay-shield">
-              <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V5l-7-3z"
-                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-            Secure checkout via Razorpay
-          </p>
-
-          <!-- Divider -->
-          <div class="plan-divider"></div>
-
-          <!-- Features list -->
-          <ul class="plan-features">
-            <li
-              class="feature-item"
-              [class.feature-item--disabled]="!feature.included"
-              *ngFor="let feature of plan.features; trackBy: trackByIndex"
-            >
-              <!-- Check icon -->
-              <span class="feature-icon feature-icon--check" *ngIf="feature.included">
-                <svg viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-              <!-- Cross icon -->
-              <span class="feature-icon feature-icon--cross" *ngIf="!feature.included">
-                <svg viewBox="0 0 16 16" fill="none">
-                  <path d="M5 5l6 6M11 5l-6 6" stroke="currentColor" stroke-width="1.75"
-                    stroke-linecap="round"/>
-                </svg>
-              </span>
-              <span class="feature-text" [class.feature-text--highlight]="feature.highlight && feature.included">
-                {{ feature.text }}
-              </span>
-            </li>
-          </ul>
-
+          </div>
+          <span class="text-sm font-bold text-white flex-1">CreatorEarn Pro</span>
+          <span class="text-sm text-white/60">₹999/mo</span>
         </div>
+        <div class="bg-white/10 rounded-xl p-3 mb-4 space-y-2">
+          <p class="text-[10px] uppercase tracking-widest text-white/40 font-semibold mb-2">
+            Payment method
+          </p>
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/15 border border-white/20">
+            <span class="text-sm">⚡</span>
+            <span class="text-xs font-medium text-white/90 flex-1">UPI (instant)</span>
+            <span class="text-xs text-cyan-300 font-bold">✓</span>
+          </div>
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-white/10">
+            <span class="text-sm">💳</span>
+            <span class="text-xs text-white/70">Credit / Debit Card</span>
+          </div>
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-white/10">
+            <span class="text-sm">🏦</span>
+            <span class="text-xs text-white/70">Net Banking</span>
+          </div>
+        </div>
+        <button class="w-full py-3 bg-white text-[#1e1b4b] text-sm font-bold rounded-xl
+                       flex items-center justify-center gap-2 hover:bg-indigo-50 transition-colors shadow-md">
+          Pay ₹999 Securely
+          <svg viewBox="0 0 16 16" fill="none" class="w-3.5 h-3.5">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="flex items-center justify-center gap-1 text-[10px] text-white/35 mt-2.5">
+          <svg viewBox="0 0 20 20" fill="none" class="w-3 h-3">
+            <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
+              stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          Secured &amp; powered by Razorpay
+        </p>
       </div>
+
     </div>
   </section>
 
+  <!-- SECTION 4: COMPARISON TABLE -->
+  <section class="relative z-10 py-20 px-4">
+    <div class="max-w-5xl mx-auto">
 
-  <!-- ════════════════════════════════════════════════
-       SECTION 3 — RAZORPAY PAYMENT CTA
-  ════════════════════════════════════════════════ -->
-  <section class="razorpay-section">
-    <div class="section-inner">
-      <div class="razorpay-card">
-
-        <!-- Left: copy -->
-        <div class="razorpay-copy">
-          <div class="razorpay-eyebrow">
-            <svg viewBox="0 0 20 20" fill="none" class="w-3.5 h-3.5">
-              <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
-                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-            Powered by Razorpay
-          </div>
-          <h2 class="razorpay-headline">
-            Ready to unlock your <span class="gradient-text">full earning potential?</span>
-          </h2>
-          <p class="razorpay-subtext">
-            Upgrade in seconds with India's most trusted payment gateway.
-            UPI, cards, net banking, and EMI options available.
-          </p>
-
-          <!-- Trust badges -->
-          <div class="trust-badges">
-            <div class="trust-badge">
-              <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
-                <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
-                  stroke="#6366f1" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M7 10l2 2 4-4" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              256-bit SSL
-            </div>
-            <div class="trust-badge">
-              <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
-                <rect x="3" y="7" width="14" height="10" rx="2" stroke="#6366f1" stroke-width="1.5"/>
-                <path d="M7 7V5a3 3 0 016 0v2" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              PCI Compliant
-            </div>
-            <div class="trust-badge">
-              <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
-                <path d="M4 10a6 6 0 1012 0 6 6 0 00-12 0zM10 7v3l2 2"
-                  stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              Cancel Anytime
-            </div>
-            <div class="trust-badge">
-              <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-amber-400">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0
-                  00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0
-                  00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54
-                  1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
-                  1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0
-                  00.951-.69l1.07-3.292z"/>
-              </svg>
-              4.9 / 5 Rating
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: payment card mockup -->
-        <div class="razorpay-payment-card">
-          <div class="payment-card-inner">
-
-            <div class="payment-card-header">
-              <div class="payment-card-logo">
-                <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
-                  <path d="M3 14L6 9L10 12L14 6L17 10" stroke="white" stroke-width="1.75"
-                    stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <span class="payment-card-brand">CreatorEarn Pro</span>
-              <span class="payment-card-price">₹999/mo</span>
-            </div>
-
-            <div class="payment-methods">
-              <p class="payment-methods-label">Choose payment method</p>
-              <div class="payment-method-row payment-method-row--active">
-                <span class="pm-icon">⚡</span>
-                <span class="pm-label">UPI (instant)</span>
-                <span class="pm-check">✓</span>
-              </div>
-              <div class="payment-method-row">
-                <span class="pm-icon">💳</span>
-                <span class="pm-label">Credit / Debit Card</span>
-              </div>
-              <div class="payment-method-row">
-                <span class="pm-icon">🏦</span>
-                <span class="pm-label">Net Banking</span>
-              </div>
-            </div>
-
-            <button class="payment-cta-btn">
-              Pay ₹999 Securely
-              <svg viewBox="0 0 16 16" fill="none" class="w-3.5 h-3.5">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-
-            <p class="payment-powered">
-              <svg viewBox="0 0 20 20" fill="none" class="w-3 h-3">
-                <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
-                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              </svg>
-              Secured &amp; powered by Razorpay
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════════════
-       SECTION 4 — FEATURE COMPARISON TABLE
-  ════════════════════════════════════════════════ -->
-  <section class="comparison-section">
-    <div class="section-inner">
-
-      <div class="section-header">
-        <h2 class="section-title">Compare all features</h2>
-        <p class="section-subtitle">Everything side by side so you can pick the right plan.</p>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-950 tracking-tight mb-2">Compare all features</h2>
+        <p class="text-base text-gray-500">Everything side by side so you can pick the right plan.</p>
       </div>
 
-      <div class="comparison-table-wrap">
-        <table class="comparison-table">
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="w-full border-collapse min-w-[540px]">
           <thead>
             <tr>
-              <th class="comp-th comp-th--feature">Feature</th>
-              <th class="comp-th">Free</th>
-              <th class="comp-th comp-th--pro">
+              <th class="text-left px-5 py-3.5 text-xs font-semibold text-gray-600
+                         bg-gray-50 border-b border-gray-100 w-2/5">Feature</th>
+              <th class="text-center px-4 py-3.5 text-xs font-semibold text-gray-500
+                         bg-gray-50 border-b border-gray-100">Free</th>
+              <th class="text-center px-4 py-3.5 text-xs font-semibold text-indigo-700
+                         bg-indigo-50 border-b border-indigo-100">
                 Pro
-                <span class="th-badge">Popular</span>
+                <span class="ml-1.5 text-[9px] font-bold px-1.5 py-0.5 bg-indigo-600 text-white rounded-full">
+                  Popular
+                </span>
               </th>
-              <th class="comp-th">Creator Plus</th>
+              <th class="text-center px-4 py-3.5 text-xs font-semibold text-gray-500
+                         bg-gray-50 border-b border-gray-100">Creator Plus</th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="comp-row"
-              *ngFor="let row of comparisonRows; trackBy: trackByFeature"
-            >
-              <td class="comp-td comp-td--feature">
+            <tr *ngFor="let row of comparisonRows; trackBy: trackByFeature"
+                class="border-b border-gray-50 hover:bg-gray-50/60 transition-colors last:border-0">
+              <td class="px-5 py-3 text-sm font-medium text-gray-700">
                 {{ row.feature }}
-                <span class="comp-tooltip" *ngIf="row.tooltip" [attr.title]="row.tooltip">?</span>
+                <span *ngIf="row.tooltip"
+                      class="ml-1 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full
+                             bg-gray-200 text-gray-500 text-[9px] font-bold cursor-help"
+                      [title]="row.tooltip">?</span>
               </td>
-
-              <!-- Free -->
-              <td class="comp-td">
-                <ng-container [ngSwitch]="getComparisonValue(row.free)">
-                  <span class="comp-check" *ngSwitchCase="'check'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M3 8l3.5 3.5L13 4.5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-cross" *ngSwitchCase="'cross'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-text" *ngSwitchCase="'text'">{{ row.free }}</span>
+              <td class="px-4 py-3 text-center">
+                <ng-container [ngSwitch]="compVal(row.free)">
+                  <svg *ngSwitchCase="'check'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <svg *ngSwitchCase="'cross'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                  <span *ngSwitchCase="'text'" class="text-xs font-medium text-gray-600">{{ row.free }}</span>
                 </ng-container>
               </td>
-
-              <!-- Pro -->
-              <td class="comp-td comp-td--pro">
-                <ng-container [ngSwitch]="getComparisonValue(row.pro)">
-                  <span class="comp-check" *ngSwitchCase="'check'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M3 8l3.5 3.5L13 4.5" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-cross" *ngSwitchCase="'cross'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-text comp-text--pro" *ngSwitchCase="'text'">{{ row.pro }}</span>
+              <td class="px-4 py-3 text-center bg-indigo-50/40">
+                <ng-container [ngSwitch]="compVal(row.pro)">
+                  <svg *ngSwitchCase="'check'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <svg *ngSwitchCase="'cross'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                  <span *ngSwitchCase="'text'" class="text-xs font-semibold text-indigo-600">{{ row.pro }}</span>
                 </ng-container>
               </td>
-
-              <!-- Creator Plus -->
-              <td class="comp-td">
-                <ng-container [ngSwitch]="getComparisonValue(row.creatorPlus)">
-                  <span class="comp-check" *ngSwitchCase="'check'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M3 8l3.5 3.5L13 4.5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-cross" *ngSwitchCase="'cross'">
-                    <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
-                      <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span class="comp-text" *ngSwitchCase="'text'">{{ row.creatorPlus }}</span>
+              <td class="px-4 py-3 text-center">
+                <ng-container [ngSwitch]="compVal(row.creatorPlus)">
+                  <svg *ngSwitchCase="'check'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M3 8l3.5 3.5L13 4.5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <svg *ngSwitchCase="'cross'" viewBox="0 0 16 16" fill="none" class="w-4 h-4 mx-auto">
+                    <path d="M5 5l6 6M11 5l-6 6" stroke="#d1d5db" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                  <span *ngSwitchCase="'text'" class="text-xs font-medium text-gray-600">{{ row.creatorPlus }}</span>
                 </ng-container>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
     </div>
   </section>
 
-
-  <!-- ════════════════════════════════════════════════
-       SECTION 5 — FAQ ACCORDION
-  ════════════════════════════════════════════════ -->
-  <section class="faq-section">
-    <div class="section-inner section-inner--narrow">
-
-      <div class="section-header">
-        <h2 class="section-title">Frequently asked questions</h2>
-        <p class="section-subtitle">
+  <!-- SECTION 5: FAQ -->
+  <section class="relative z-10 py-20 px-4 bg-gray-50">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-950 tracking-tight mb-2">
+          Frequently asked questions
+        </h2>
+        <p class="text-base text-gray-500">
           Can't find your answer?
-          <a routerLink="/auth/signup" class="faq-contact-link">Talk to us →</a>
+          <a routerLink="/auth/signup" class="text-indigo-600 font-medium hover:underline ml-1">Talk to us →</a>
         </p>
       </div>
-
-      <div class="faq-list">
-        <div
-          class="faq-item"
-          [class.faq-item--open]="faq.open"
-          *ngFor="let faq of faqs; let i = index; trackBy: trackByIndex"
-        >
-          <button
-            class="faq-trigger"
-            (click)="toggleFaq(i)"
-            type="button"
-            [attr.aria-expanded]="faq.open"
-          >
-            <span class="faq-question">{{ faq.question }}</span>
-            <span class="faq-chevron" [class.faq-chevron--open]="faq.open">
-              <svg viewBox="0 0 20 20" fill="none" class="w-5 h-5">
-                <path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.75"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
+      <div class="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+        <div *ngFor="let faq of faqs; let i = index; trackBy: trackByIndex"
+             class="border-b border-gray-100 last:border-0"
+             [ngClass]="faq.open ? 'bg-indigo-50' : ''">
+          <button type="button" (click)="toggleFaq(i)" [attr.aria-expanded]="faq.open"
+                  class="w-full flex items-center justify-between gap-4 px-6 py-5
+                         text-left bg-transparent border-0 cursor-pointer hover:bg-gray-50/80 transition-colors">
+            <span class="text-sm font-semibold text-gray-900 leading-snug">{{ faq.question }}</span>
+            <svg viewBox="0 0 20 20" fill="none" class="w-5 h-5 flex-shrink-0 transition-transform duration-200"
+                 [class.rotate-180]="faq.open"
+                 [class.text-indigo-600]="faq.open"
+                 [class.text-gray-400]="!faq.open">
+              <path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
-          <div class="faq-body" [class.faq-body--open]="faq.open">
-            <div class="faq-answer">{{ faq.answer }}</div>
+          <div class="faq-body" [class.open]="faq.open">
+            <p class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">{{ faq.answer }}</p>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
-
-  <!-- ════════════════════════════════════════════════
-       SECTION 6 — BOTTOM CTA BANNER
-  ════════════════════════════════════════════════ -->
-  <section class="bottom-cta-section">
-    <div class="section-inner">
-      <div class="bottom-cta-card">
-
-        <div class="bottom-cta-glow" aria-hidden="true"></div>
-
-        <div class="bottom-cta-content">
-          <p class="bottom-cta-eyebrow">
-            <span class="pulse-dot"></span>
+  <!-- SECTION 6: BOTTOM CTA -->
+  <section class="relative z-10 py-20 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="relative rounded-3xl overflow-hidden text-center px-6 py-16
+                  bg-gradient-to-br from-[#4338ca] via-[#6d28d9] to-[#7c3aed]
+                  shadow-2xl shadow-indigo-900/30">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32
+                    bg-white/10 blur-3xl rounded-full pointer-events-none"></div>
+        <div class="relative z-10">
+          <p class="inline-flex items-center gap-2 text-xs font-semibold text-white/70 mb-4">
+            <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block"></span>
             Free forever — no card needed
           </p>
-          <h2 class="bottom-cta-headline">
-            Start tracking your earnings today
+          <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight mb-3">
+            Start tracking your<br>earnings today
           </h2>
-          <p class="bottom-cta-sub">
+          <p class="text-base text-indigo-200 max-w-md mx-auto mb-8">
             Join 12,000+ creators already using CreatorEarn to grow smarter.
           </p>
-          <div class="bottom-cta-actions">
-            <a routerLink="/auth/signup" class="btn-cta-white">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a routerLink="/auth/signup"
+               class="flex items-center gap-2 px-8 py-3.5 bg-white text-[#3730a3] font-bold text-sm
+                      rounded-xl shadow-xl hover:bg-indigo-50 hover:-translate-y-0.5 transition-all">
               Start Free Now
               <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
                 <path d="M4 10h12M11 6l5 4-5 4" stroke="currentColor" stroke-width="1.75"
                   stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
-            <a routerLink="/auth/signup" class="btn-cta-outline">
+            <a routerLink="/auth/signup"
+               class="flex items-center gap-2 px-8 py-3.5 text-white font-semibold text-sm
+                      rounded-xl border border-white/25 bg-white/10 backdrop-blur-sm
+                      hover:bg-white/20 hover:-translate-y-0.5 transition-all">
               Upgrade with Razorpay
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
 </div>
 
-
-<!-- ════════════════════════════════════════════════
-     MOBILE STICKY BOTTOM CTA
-════════════════════════════════════════════════ -->
-<div class="mobile-sticky-cta">
-  <a routerLink="/auth/signup" class="mobile-sticky-btn">
+<!-- MOBILE STICKY CTA -->
+<div class="fixed bottom-0 inset-x-0 z-50 p-3 bg-white/90 backdrop-blur border-t
+            border-gray-100 shadow-lg md:hidden">
+  <a routerLink="/auth/signup"
+     class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold
+            text-sm text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-md">
     <svg viewBox="0 0 20 20" fill="none" class="w-4 h-4">
       <path d="M10 2L3 5v5c0 4.4 3 8.1 7 9 4-.9 7-4.6 7-9V5l-7-3z"
         stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
