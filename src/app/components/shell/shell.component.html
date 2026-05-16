@@ -1,34 +1,37 @@
 <div class="flex h-screen overflow-hidden bg-gray-50">
-
-  <!-- ══════════════════════════════════════════
-           MOBILE OVERLAY — shown behind open sidebar
-      ══════════════════════════════════════════ -->
-  <div *ngIf="sidebarOpen" (click)="closeSidebar()" class="fixed inset-0 z-30 bg-gray-900/50 backdrop-blur-sm lg:hidden
-               transition-opacity duration-300" aria-hidden="true"></div>
-
-  <!-- ══════════════════════════════════════════
-           SIDEBAR WRAPPER
-           • Mobile: fixed, full-height, slides in from left
-           • Desktop: static, always visible
-      ══════════════════════════════════════════ -->
-  <div class="fixed inset-y-0 left-0 z-40 flex flex-col
+ 
+      <!-- ══ MOBILE OVERLAY ══════════════════════════════════
+           Covers the page behind the open sidebar on mobile.
+           lg:hidden ensures it never shows on desktop.
+      ══════════════════════════════════════════════════════ -->
+      <div *ngIf="sidebarOpen"
+        (click)="closeSidebar()"
+        class="fixed inset-0 z-30 bg-gray-900/60 backdrop-blur-sm
+               lg:hidden animate-fade-in"
+        aria-hidden="true"
+      ></div>
+ 
+      <!-- ══ SIDEBAR WRAPPER ═════════════════════════════════
+           Mobile  → fixed, covers full viewport height, slides from left
+           Desktop → static, always visible, no z-index needed
+      ══════════════════════════════════════════════════════ -->
+      <div
+        class="fixed top-0 bottom-0 left-0 z-40
                transition-transform duration-300 ease-in-out
-               lg:static lg:translate-x-0 lg:z-auto" [class.-translate-x-full]="!sidebarOpen"
-    [class.translate-x-0]="sidebarOpen">
-    <app-sidebar (closeRequested)="closeSidebar()"></app-sidebar>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-           MAIN CONTENT AREA
-      ══════════════════════════════════════════ -->
-  <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
-    <app-navbar (menuToggled)="toggleSidebar()"></app-navbar>
-
-    <main class="flex-1 overflow-y-auto">
-      <div class="animate-fade-in">
-        <router-outlet></router-outlet>
+               lg:static lg:z-auto lg:translate-x-0"
+        [class.-translate-x-full]="!sidebarOpen"
+        [class.translate-x-0]="sidebarOpen"
+      >
+        <app-sidebar (closeRequested)="closeSidebar()"></app-sidebar>
       </div>
-    </main>
-  </div>
-
-</div>
+ 
+      <!-- ══ MAIN CONTENT ════════════════════════════════════ -->
+      <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <app-navbar (menuToggled)="toggleSidebar()"></app-navbar>
+ 
+        <main class="flex-1 overflow-y-auto">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
+ 
+    </div>

@@ -1,10 +1,13 @@
-import { Component, inject } from '@angular/core';
+declare const google: any;
+
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatatransferService } from 'src/app/services/datatransfer.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +16,10 @@ import { DatatransferService } from 'src/app/services/datatransfer.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
+    private http = inject(HttpClient);
+  
   private datatransfer = inject(DatatransferService);
 
   private authService = inject(AuthService);
@@ -37,6 +42,24 @@ export class LoginComponent {
   isInvalid(field: string): boolean {
     const ctrl = this.form.get(field);
     return !!(ctrl?.invalid && ctrl.touched);
+  }
+
+  ngOnInit(): void {
+
+    google.accounts.id.initialize({
+      client_id: '901346557734-g3cvrncso9pd621fbjqbk3cclu2uuamh.apps.googleusercontent.com',
+      callback: (response: any) => this.handleGoogleLogin(response)
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('google-btn'),
+      {
+        theme: 'outline',
+        size: 'large',
+        width: 320,
+        shape: 'pill'
+      }
+    );
   }
 
   onSubmit(): void {
@@ -70,6 +93,25 @@ export class LoginComponent {
           err?.error?.message ??
           (err?.status === 401 ? 'Invalid email or password.' : 'Something went wrong. Please try again.');
       }
+    });
+  }
+
+  handleGoogleLogin(response: any) {
+
+    console.log(response);
+
+    this.http.post(
+      'http://localhost:5000/api/auth/google',
+      {
+        token: response.credential
+      }
+    ).subscribe((res: any) => {
+
+      localStorage.setItem('token', res.token);
+
+      console.log(res);
+
+      // redirect dashboard
     });
   }
 }
