@@ -57,15 +57,13 @@ export class LoginComponent {
         localStorage.setItem("userDetails", JSON.stringify(res));
 
         const savedPlan = localStorage.getItem('selectedPlan');
-        const redirect = this.route.snapshot.queryParams['redirect'];
 
-        if (savedPlan && redirect === '/pricing') {
-          localStorage.removeItem('selectedPlan');
-          this.router.navigate(['/pricing']);
-          return; // ✅ stop here, don't navigate to dashboard
+        if (savedPlan) {
+          this.router.navigate(['/pricing'], { queryParams: { autoPayment: 'true' } });
+          return;
         }
 
-        this.router.navigate(['/workspace/dashboard']); // default
+        this.router.navigate(['/workspace/dashboard']);
       },
       error: (err) => {
         this.errorMessage =

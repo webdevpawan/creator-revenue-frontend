@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavItem {
@@ -10,18 +10,28 @@ interface NavItem {
 
 @Component({
   selector: 'app-sidebar',
-  standalone : true,
-  imports : [CommonModule, RouterLink, RouterLinkActive],
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styles: [`
+    a.active {
+      color: #4338ca !important;
+      background-color: #eef2ff !important;
+    }
+    a.active:hover {
+      background-color: #eef2ff !important;
+    }
+  `]
 })
 
 
 export class SidebarComponent {
 
+  @Output() closeRequested = new EventEmitter<void>();
+
   linkOptions = { exact: false };
 
-   navItems: NavItem[] = [
+  navItems: NavItem[] = [
     {
       label: 'Dashboard',
       route: '/workspace/dashboard',
@@ -55,8 +65,8 @@ export class SidebarComponent {
 
 
   trackByRoute(index: number, item: NavItem) {
-  return item.route;
-}
+    return item.route;
+  }
 
 }
 

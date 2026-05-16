@@ -1,7 +1,7 @@
 // src/app/landing/components/pricing/ln-pricing.component.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router,ActivatedRoute  } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -57,9 +57,22 @@ export interface FaqItem {
     .orb-2 { animation: floatOrb 11s ease-in-out infinite 2s; }
   `],
 })
-export class LnPricingComponent {
+export class LnPricingComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+
+    ngOnInit(): void {
+    const autoPayment = this.route.snapshot.queryParams['autoPayment'];
+    const savedPlan = localStorage.getItem('selectedPlan');
+
+    if (autoPayment === 'true' && savedPlan) {
+      const plan: PricingPlan = JSON.parse(savedPlan);
+      localStorage.removeItem('selectedPlan'); // ✅ clean up
+      this.payNow(plan);                       // ✅ auto trigger
+    }
+  }
 
 
   isYearly = false;
@@ -242,6 +255,7 @@ export class LnPricingComponent {
               next: (verifyRes) => {
                 console.log('Payment verified', verifyRes);
                 alert('Payment Successful & Verified!');
+                this.router.navigate(['/dashboard'])
               },
               error: (err) => {
                 console.error('Payment verification failed', err);

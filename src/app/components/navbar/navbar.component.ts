@@ -1,9 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { filter, map, startWith } from 'rxjs'
 import { DatatransferService } from 'src/app/services/datatransfer.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -12,8 +14,10 @@ import { DatatransferService } from 'src/app/services/datatransfer.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+  @Output() menuToggled = new EventEmitter<void>();
 
   private authService = inject(AuthService);
+  private http = inject(HttpClient);
   private datatransfer = inject(DatatransferService);
   private router = inject(Router);
   userName: any;
@@ -23,11 +27,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.datatransfer.getLoginData$.subscribe((data: any) => {
-      this.userName = data?.name ?? 'Creator';
-      this.userInitials = this.userName.slice(0, 2).toUpperCase();
+    const userDetails = localStorage.getItem("userDetails");
+    const name = userDetails ? JSON.parse(userDetails) : null;
 
-    })
+    this.userName = name?.name ?? 'Creator';
+    this.userInitials = this.userName.slice(0, 2).toUpperCase();
 
   }
 
@@ -56,5 +60,31 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+
+
+  showLogoutModal = false;
+
+  openLogoutModal(): void {
+    this.showLogoutModal = true;
+  }
+
+  closeLogoutModal(): void {
+    this.showLogoutModal = false;
+  }
+
+  confirmLogout(): void {
+    this.http.post(`${environment.apiUrl}/api/auth/logout`, {}, { withCredentials: true }
+    ).subscribe({
+      next: () => {
+        this.showLogoutModal = false;
+        localStorage.clear();
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 }
