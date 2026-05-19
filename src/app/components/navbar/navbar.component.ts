@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit {
   private router = inject(Router);
   userName: any;
   userInitials: any;
+  showLogoutModal = false;
 
 
 
@@ -64,7 +65,6 @@ export class NavbarComponent implements OnInit {
 
 
 
-  showLogoutModal = false;
 
   openLogoutModal(): void {
     this.showLogoutModal = true;

@@ -8,6 +8,7 @@ import { finalize } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatatransferService } from 'src/app/services/datatransfer.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -18,8 +19,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
-    private http = inject(HttpClient);
-  
+  private http = inject(HttpClient);
+
   private datatransfer = inject(DatatransferService);
 
   private authService = inject(AuthService);
@@ -56,7 +57,7 @@ export class LoginComponent implements OnInit {
       {
         theme: 'outline',
         size: 'large',
-        width: 320,
+        width: Math.min(window.innerWidth - 60, 320),
         shape: 'pill'
       }
     );
@@ -101,17 +102,14 @@ export class LoginComponent implements OnInit {
     console.log(response);
 
     this.http.post(
-      'http://localhost:5000/api/auth/google',
+      `${environment.apiUrl}/api/auth/google`,
       {
         token: response.credential
       }
     ).subscribe((res: any) => {
-
-      localStorage.setItem('token', res.token);
-
+      localStorage.setItem("userDetails", JSON.stringify(res));
       console.log(res);
-
-      // redirect dashboard
+      this.router.navigate(['/workspace/dashboard']);
     });
   }
 }
