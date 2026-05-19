@@ -108,8 +108,14 @@ export class LoginComponent implements OnInit {
       }
     ).subscribe((res: any) => {
       localStorage.setItem("userDetails", JSON.stringify(res));
-      console.log(res);
-      this.router.navigate(['/workspace/dashboard']);
+       const savedPlan = localStorage.getItem('selectedPlan');
+
+        if (savedPlan) {
+          this.router.navigate(['/pricing'], { queryParams: { autoPayment: 'true' } });
+          return;
+        }
+
+        this.router.navigate(['/workspace/dashboard']);
     });
   }
 }

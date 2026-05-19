@@ -1,7 +1,7 @@
-import { Component as Comp, Input as Inp, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component as Comp, Input as Inp, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ChartDataPoint } from 'src/app/models';
- 
+
 @Comp({
   selector: 'app-mini-chart',
   standalone: true,
@@ -9,33 +9,36 @@ import { ChartDataPoint } from 'src/app/models';
   templateUrl: './mini-chart.component.html'
 })
 export class MiniChartComponent implements AfterViewInit {
-  @Inp() data: ChartDataPoint[] = [];
+  @Input() data: ChartDataPoint[] = [];
   @ViewChild('chartCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
- 
+
   ngAfterViewInit(): void {
+    console.log("chart Data ======", this.data);
+
     this.renderChart();
+
   }
- 
+
   private renderChart(): void {
     const canvas = this.canvasRef.nativeElement;
     const ctx = canvas.getContext('2d');
     if (!ctx || !this.data.length) return;
- 
+
     canvas.width = canvas.offsetWidth * window.devicePixelRatio;
     canvas.height = canvas.offsetHeight * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
- 
+
     const W = canvas.offsetWidth;
     const H = canvas.offsetHeight;
     const pad = { top: 12, right: 16, bottom: 36, left: 52 };
     const chartW = W - pad.left - pad.right;
     const chartH = H - pad.top - pad.bottom;
- 
+
     const maxRev = Math.max(...this.data.map(d => d.revenue));
     const maxClicks = Math.max(...this.data.map(d => d.clicks));
- 
+
     const xStep = chartW / (this.data.length - 1);
- 
+
     // Gridlines
     ctx.strokeStyle = '#f3f4f6';
     ctx.lineWidth = 1;
@@ -46,7 +49,7 @@ export class MiniChartComponent implements AfterViewInit {
       ctx.lineTo(W - pad.right, y);
       ctx.stroke();
     }
- 
+
     // Revenue line (filled area)
     ctx.beginPath();
     this.data.forEach((d, i) => {
@@ -64,7 +67,7 @@ export class MiniChartComponent implements AfterViewInit {
     grad.addColorStop(1, 'rgba(99,102,241,0)');
     ctx.fillStyle = grad;
     ctx.fill();
- 
+
     // Revenue line stroke
     ctx.beginPath();
     this.data.forEach((d, i) => {
@@ -76,7 +79,7 @@ export class MiniChartComponent implements AfterViewInit {
     ctx.lineWidth = 2;
     ctx.lineJoin = 'round';
     ctx.stroke();
- 
+
     // Clicks line
     ctx.beginPath();
     this.data.forEach((d, i) => {
@@ -89,18 +92,24 @@ export class MiniChartComponent implements AfterViewInit {
     ctx.setLineDash([4, 3]);
     ctx.stroke();
     ctx.setLineDash([]);
- 
+
     // X-axis labels
     ctx.fillStyle = '#9ca3af';
     ctx.font = '10px DM Sans, system-ui';
     ctx.textAlign = 'center';
     this.data.forEach((d, i) => {
+
       if (i % 2 === 0) {
         const x = pad.left + i * xStep;
-        ctx.fillText(d.date, x, H - 8);
+        const formattedDate = new Date(d.date).toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        ctx.fillText(formattedDate, x, H - 8);
       }
     });
- 
+
     // Y-axis labels
     ctx.textAlign = 'right';
     for (let i = 0; i <= 3; i++) {
@@ -108,7 +117,7 @@ export class MiniChartComponent implements AfterViewInit {
       const y = pad.top + (chartH / 3) * i + 4;
       ctx.fillText('$' + Math.round(val), pad.left - 8, y);
     }
- 
+
     // Dots on revenue line
     this.data.forEach((d, i) => {
       const x = pad.left + i * xStep;
@@ -123,4 +132,4 @@ export class MiniChartComponent implements AfterViewInit {
     });
   }
 }
- 
+

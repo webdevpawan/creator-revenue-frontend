@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -6,6 +6,7 @@ import { filter, map, startWith } from 'rxjs'
 import { DatatransferService } from 'src/app/services/datatransfer.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -17,12 +18,13 @@ export class NavbarComponent implements OnInit {
   @Output() menuToggled = new EventEmitter<void>();
 
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
   private http = inject(HttpClient);
   private datatransfer = inject(DatatransferService);
   private router = inject(Router);
   userName: any;
   userInitials: any;
-  showLogoutModal = false;
+  showLogoutModal: boolean = false;
 
 
 
@@ -68,10 +70,12 @@ export class NavbarComponent implements OnInit {
 
   openLogoutModal(): void {
     this.showLogoutModal = true;
+    this.cdr.detectChanges();
   }
 
   closeLogoutModal(): void {
     this.showLogoutModal = false;
+    this.cdr.detectChanges();
   }
 
   confirmLogout(): void {

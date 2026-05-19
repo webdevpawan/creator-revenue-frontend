@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavItem {
@@ -25,9 +25,22 @@ interface NavItem {
 })
 
 
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
   @Output() closeRequested = new EventEmitter<void>();
+
+  userName: any;
+  userInitials: any
+
+  ngOnInit(): void {
+
+    const userDetails = localStorage.getItem("userDetails");
+    const name = userDetails ? JSON.parse(userDetails) : null;
+
+    this.userName = name?.name ?? 'Creator';
+    this.userInitials = this.userName.slice(0, 2).toUpperCase();
+
+  }
 
   linkOptions = { exact: false };
 
