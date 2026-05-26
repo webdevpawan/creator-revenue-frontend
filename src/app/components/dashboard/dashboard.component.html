@@ -59,7 +59,7 @@
             {{ data.stats.revenueChange >= 0 ? '+' : '' }}{{ data.stats.revenueChange }}%
           </span>
         </div>
-        <p class="text-2xl font-bold text-gray-900 font-mono">{{ data.stats.totalRevenue | currency:'INR':'symbol':'1.0-0' }}</p>
+        <p class="text-2xl font-bold text-gray-900 font-mono">{{ data.stats.totalRevenue | currency:'USD':'symbol':'1.0-0' }}</p>
         <p class="text-xs text-gray-500 mt-1">Total Revenue</p>
       </div>
 
@@ -224,7 +224,7 @@
             </td>
             <td class="px-5 py-3.5 text-right">
               <span class="text-sm font-semibold" [class]="campaign.revenue > 0 ? 'text-emerald-600' : 'text-gray-400'">
-                {{ campaign.revenue > 0 ? (campaign.revenue | currency:'INR':'symbol':'1.0-0') : '—' }}
+                {{ campaign.revenue > 0 ? (campaign.revenue | currency:'USD':'symbol':'1.0-0') : '—' }}
               </span>
             </td>
             <td class="px-5 py-3.5 text-right">
